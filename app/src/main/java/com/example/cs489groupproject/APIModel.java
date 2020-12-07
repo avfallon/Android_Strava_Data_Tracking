@@ -23,6 +23,10 @@ public class APIModel {
     private String activitiesURL = "https://www.strava.com/api/v3/athlete/activities";
     private String authenticationURL = "https://www.strava.com/oauth/token";
 
+    // values received from LoginActivity
+    private String username;
+    private String password;
+
     public APIModel(Context context){
         reqQueue = Volley.newRequestQueue(context);
         connect();
@@ -80,7 +84,9 @@ public class APIModel {
         reqQueue.add(strReq);
     }
 
+    public void setUsername(String username) { this.username = username; }
 
+    public void setPassword(String password) { this.password = password; }
 
     // This private class is just the StringRequest class that I overrode to allow for headers/params
     private class myStrRequest extends StringRequest {

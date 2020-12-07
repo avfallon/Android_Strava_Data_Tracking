@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context=".MainActivity">
+    tools:context=".LoginActivity">
 
+    <!-- view for AdMob Interstitial Ad -->
     <TableRow>
         <TextView
+            android:id="@+id/app_name"
             style="@style/TitleTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,20 +19,41 @@
 
     <TableRow>
         <TextView
+            android:id="@+id/level"
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/team"
+            android:text=""
+            />
+    </TableRow>
+
+    <TableRow>
+        <EditText
+            android:id="@+id/username"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/username_hint"
+            />
+    </TableRow>
+
+    <TableRow>
+        <EditText
+            android:id="@+id/password"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/password_hint"
             />
     </TableRow>
 
     <TableRow>
         <Button
+            android:id="@+id/next_level_button"
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/log_in"
-            android:onClick="onClick"
             />
     </TableRow>
 

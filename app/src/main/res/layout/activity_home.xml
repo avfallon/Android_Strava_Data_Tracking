@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".MainActivity">
+    tools:context=".HomeActivity">
 
     <TableRow>
         <TextView
-            style="@style/TitleTheme"
+            style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
+            android:text="this is where stuff starts happening I guess"
             />
     </TableRow>
 
@@ -22,17 +22,7 @@
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/team"
-            />
-    </TableRow>
-
-    <TableRow>
-        <Button
-            style="@style/TextTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/log_in"
-            android:onClick="onClick"
+            android:text="test"
             />
     </TableRow>
 
