@@ -3,18 +3,14 @@ package com.example.cs489groupproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.lang.StringBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,42 +18,55 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-
 public class MainActivity extends AppCompatActivity {
     private RequestQueue reqQueue;
-    private String response;
+    private String refreshToken;
+    private SharedPreferences preferences;
+    private String athleteURL = "https://www.strava.com/api/v3/athlete";
+    private String activitiesURL = "https://www.strava.com/api/v3/athlete/activities";
+    private String authenticationURL = "https://www.strava.com/oauth/token";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         reqQueue = Volley.newRequestQueue(this);
 
-        Log.w("MA", "sending request");
+//        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        SharedPreferences.Editor editor = preferences.edit();
+//        editor.putString("refreshToken", "edf4895d17c3c590c7fee640a3c3c27665ef9b24");
+//        editor.commit();
+
 
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Authorization", "Bearer e5fe98a51ef89da9ea99abb405918cd51f92db4c");
-
+        headers.put("accept", "application/json");
         Map<String, String> params = new HashMap<String, String>();
+        params.put("after", "10");
+        params.put("per_page", "30");
 
-        getRequest( "https://www.strava.com/api/v3/athlete", headers, params);
+        request( activitiesURL, Request.Method.GET, headers, params);
 
-
-
-//            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//            String inputLine;
-//            StringBuffer content = new StringBuffer();
-//            while ((inputLine = in.readLine()) != null) {
-//                content.append(inputLine);
-//            }
-//            Log.w("MA", content.toString());
-
-
+        refreshToken = "edf4895d17c3c590c7fee640a3c3c27665ef9b24";
+        refreshAccessCode();
     }
 
-    public void getRequest(String url, Map<String, String> headers, Map<String, String> params) {
-        myStrRequest strReq = new myStrRequest(Request.Method.GET, url, new Response.Listener<String>(){
+    // This method is not finished, it will be used to automatically generate a valid access code
+    public void refreshAccessCode() {
+        Map<String, String> postHeaders = new HashMap<String, String>();
+        Map<String, String> postParams = new HashMap<String, String>();
+        postParams.put("grant_type", "refresh_token");
+        postParams.put("refresh_token", refreshToken);
+        postParams.put("client_id", "56866");
+        postParams.put("client_secret", "1532b3527c5e995e845bb6ac8860d09f4ee63aaa");
+
+        request( authenticationURL, Request.Method.POST, postHeaders, postParams);
+    }
+
+
+    // This method actually creates the GET or POST request and adds it to the request queue
+    public void request(String url, int requestMethod, Map<String, String> headers, Map<String, String> params) {
+        myStrRequest strReq = new myStrRequest(requestMethod, url, new Response.Listener<String>(){
             // This is the code that is actually run when the get request is fulfilled
             @Override
             public void onResponse(String response) {
@@ -74,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
         reqQueue.add(strReq);
     }
 
+
+
+    // This private class is just the StringRequest class that I overrode to allow for headers/params
     private class myStrRequest extends StringRequest {
         private Map<String, String> headers;
         private Map<String, String> params;
@@ -95,40 +107,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-
-
-
-
-
-
-//    StringRequest strReq = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-//        @Override
-//        public void onResponse(String response) {
-//            Log.w("MA", "--"+response.substring(0,5000));
-//
-//        }
-//    }, new Response.ErrorListener() {
-//        @Override
-//        public void onErrorResponse(VolleyError error) {
-//        }
-//    }
-//    ) {
-//        @Override
-//        protected Map<String,String> getParams(){
-//            Map<String,String> params = new HashMap<String, String>();
-////                params.put("access_token", "ccc0f6d35e4936a43f433ccaa5e99fbbc242d46f");
-//
-//            return params;
-//        }
-//        @Override
-//        public Map<String, String> getHeaders() throws AuthFailureError {
-//            Map<String, String> params = new HashMap<String, String>();
-//            params.put("Authorization", "Bearer ccc0f6d35e4936a43f433ccaa5e99fbbc242d46f");
-//
-//
-//            return params;
-//        }
-//    };
-//        reqQueue.add(strReq);
-//                Log.w("MA", "Added");
-//                }
