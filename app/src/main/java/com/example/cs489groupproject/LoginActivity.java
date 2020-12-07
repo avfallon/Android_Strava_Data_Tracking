@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import android.widget.Toast;
@@ -57,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private InterstitialAd newInterstitialAd() {
+        Log.w("LA", "newInterstitialAd");
         InterstitialAd interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
         interstitialAd.setAdListener(new AdListener() {
@@ -82,16 +84,35 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showInterstitial() {
         // Show the ad if it"s ready. Otherwise toast and reload the ad.
+        Log.w("LA", "showInterstitial");
+        EditText usernameEditText = findViewById(R.id.username);
+        EditText passwordEditText = findViewById(R.id.password);
 
-        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        } else {
-            Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
-            goToNextLevel();
+        TextView label = findViewById(R.id.label);
+
+        // not error checking user input yet, i'll add it eventually
+        String usernameString = usernameEditText.getText().toString();
+        String passwordString = passwordEditText.getText().toString();
+
+        if(usernameString.equals("") || passwordString.equals("")) {
+            label.setText(R.string.empty_fields);
+        }
+        else {
+            // pass username and password to MainActivity's APIModel
+            MainActivity.model.setUsername(usernameString);
+            MainActivity.model.setPassword(passwordString);
+            //last thing to happen
+            if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
+            } else {
+                Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
+                goToNextLevel();
+            }
         }
     }
 
     private void loadInterstitial() {
+        Log.w("LA", "loadInterstitial");
         // Disable the next level button and load the ad.
         mNextLevelButton.setEnabled(false);
         AdRequest adRequest = new AdRequest.Builder()
@@ -100,6 +121,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goToNextLevel() {
+        Log.w("LA", "goToNextLevel");
         // Show the next level and reload the ad to prepare for the level after.
         // mLevelTextView.setText("Level " + (++mLevel));
         // mInterstitialAd = newInterstitialAd();
@@ -107,5 +129,9 @@ public class LoginActivity extends AppCompatActivity {
 
         Intent intent = new Intent( this, HomeActivity.class );
         startActivity( intent );
+    }
+
+    public void onClick(View v) {
+        Log.w("LA", "onClick");
     }
 }
