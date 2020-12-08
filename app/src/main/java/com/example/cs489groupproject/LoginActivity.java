@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity( intent );
     }
 
-    public void onClick(View v) {
-        Log.w("LA", "onClick");
+    public void onClick(View view) {
+
     }
 }

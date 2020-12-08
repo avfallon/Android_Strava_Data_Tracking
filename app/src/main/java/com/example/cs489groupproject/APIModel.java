@@ -23,33 +23,38 @@ public class APIModel {
     private String activitiesURL = "https://www.strava.com/api/v3/athlete/activities";
     private String authenticationURL = "https://www.strava.com/oauth/token";
 
+    private String accessCode = "6af8cde453ca96783792c1d6781991ec2a680e5e";
+
     // values received from LoginActivity
     private String username;
     private String password;
 
     public APIModel(Context context){
         reqQueue = Volley.newRequestQueue(context);
+        //refreshAccessCode();
         connect();
     }
 
     public void connect() {
-
 //        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 //        SharedPreferences.Editor editor = preferences.edit();
 //        editor.putString("refreshToken", "edf4895d17c3c590c7fee640a3c3c27665ef9b24");
 //        editor.commit();
 
-
         Map<String, String> headers = new HashMap<String, String>();
+        // old: e5fe98a51ef89da9ea99abb405918cd51f92db4c
+        // new: 6af8cde453ca96783792c1d6781991ec2a680e5e
         headers.put("Authorization", "Bearer e5fe98a51ef89da9ea99abb405918cd51f92db4c");
         headers.put("accept", "application/json");
         Map<String, String> params = new HashMap<String, String>();
         params.put("after", "10");
         params.put("per_page", "30");
 
+        Log.w("JSONR", "" + activitiesURL + " " + headers.toString() + " " + params.toString());
         request( activitiesURL, Request.Method.GET, headers, params);
 
         refreshToken = "edf4895d17c3c590c7fee640a3c3c27665ef9b24";
+
         refreshAccessCode();
     }
 
@@ -72,6 +77,8 @@ public class APIModel {
             @Override
             public void onResponse(String response) {
                 Log.w("MA", response);
+                MainActivity.response = new JSONResponse(response);
+                accessCode = MainActivity.response.getAccessToken();
             }
         }, new Response.ErrorListener() {
             @Override

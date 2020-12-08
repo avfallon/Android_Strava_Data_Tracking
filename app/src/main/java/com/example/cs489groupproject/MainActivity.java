@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private String authenticationURL = "https://www.strava.com/oauth/token";
 
     public static APIModel model;
+    // added to try and parse through response
+    public static JSONResponse response;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
