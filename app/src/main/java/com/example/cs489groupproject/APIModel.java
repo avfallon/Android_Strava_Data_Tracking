@@ -1,8 +1,12 @@
 package com.example.cs489groupproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
+import android.app.Activity;
+import androidx.activity.ComponentActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,36 +19,46 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class APIModel {
-
+    private Context context;
     private RequestQueue reqQueue;
-    private String refreshToken;
     private SharedPreferences preferences;
     private String athleteURL = "https://www.strava.com/api/v3/athlete";
     private String activitiesURL = "https://www.strava.com/api/v3/athlete/activities";
     private String authenticationURL = "https://www.strava.com/oauth/token";
 
-    private String accessCode = "6af8cde453ca96783792c1d6781991ec2a680e5e";
+    private String client_id = "56866";
+    private String client_secret = "1532b3527c5e995e845bb6ac8860d09f4ee63aaa";
+    private String accessCode;
+    private String refreshToken;
 
-    // values received from LoginActivity
-    private String username;
-    private String password;
-
-    public APIModel(Context context){
+    public APIModel(Context context, String authURL){
         reqQueue = Volley.newRequestQueue(context);
-        //refreshAccessCode();
-        connect();
+        this.context = context;
+        authorizeAccount(authURL);
+        //connect();
     }
 
-    public void connect() {
-//        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        SharedPreferences.Editor editor = preferences.edit();
-//        editor.putString("refreshToken", "edf4895d17c3c590c7fee640a3c3c27665ef9b24");
-//        editor.commit();
+    // This method takes the URL returned after login in Chrome, gets the authorization code,
+    // and makes a POST request to obtain the access code and refresh code
+    public void authorizeAccount(String url) {
+        String authCode = url.split("&")[1].substring(5);
 
+        Map<String, String> postHeaders = new HashMap<String, String>();
+        Map<String, String> postParams = new HashMap<String, String>();
+        postParams.put("client_id", client_id);
+        postParams.put("client_secret", client_secret);
+        postParams.put("code", authCode);
+        postParams.put("grant_type", "authorization_code");
+
+        request( authenticationURL, Request.Method.POST, postHeaders, postParams);
+    }
+
+
+    public void connect() {
         Map<String, String> headers = new HashMap<String, String>();
         // old: e5fe98a51ef89da9ea99abb405918cd51f92db4c
         // new: 6af8cde453ca96783792c1d6781991ec2a680e5e
-        headers.put("Authorization", "Bearer e5fe98a51ef89da9ea99abb405918cd51f92db4c");
+        headers.put("Authorization", "Bearer "+accessCode);
         headers.put("accept", "application/json");
         Map<String, String> params = new HashMap<String, String>();
         params.put("after", "10");
@@ -53,9 +67,9 @@ public class APIModel {
         Log.w("JSONR", "" + activitiesURL + " " + headers.toString() + " " + params.toString());
         request( activitiesURL, Request.Method.GET, headers, params);
 
-        refreshToken = "edf4895d17c3c590c7fee640a3c3c27665ef9b24";
-
-        refreshAccessCode();
+//        refreshToken = "edf4895d17c3c590c7fee640a3c3c27665ef9b24";
+//
+//        refreshAccessCode();
     }
 
     // This method is not finished, it will be used to automatically generate a valid access code
@@ -76,7 +90,7 @@ public class APIModel {
             // This is the code that is actually run when the get request is fulfilled
             @Override
             public void onResponse(String response) {
-                Log.w("MA", response);
+                Log.w("MA", "Response: "+response);
                 MainActivity.response = new JSONResponse(response);
                 accessCode = MainActivity.response.getAccessToken();
             }
@@ -86,14 +100,10 @@ public class APIModel {
                 //This code is executed if there is an error.
             }
         }, headers, params);
-        Log.w("MA", "strReq");
+        Log.w("MA", "Request Received");
 
         reqQueue.add(strReq);
     }
-
-    public void setUsername(String username) { this.username = username; }
-
-    public void setPassword(String password) { this.password = password; }
 
     // This private class is just the StringRequest class that I overrode to allow for headers/params
     private class myStrRequest extends StringRequest {
@@ -108,7 +118,6 @@ public class APIModel {
 
         @Override
         public Map<String, String> getHeaders() {
-            Log.w("MA", "getHeaders");
             return headers;
         }
         @Override

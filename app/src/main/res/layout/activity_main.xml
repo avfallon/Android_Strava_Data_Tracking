@@ -20,6 +20,7 @@
     <TableRow>
         <TextView
             style="@style/TextTheme"
+            android:id="@+id/response"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/team"
@@ -32,8 +33,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/log_in"
-            android:onClick="onClick"
+            android:onClick="login"
             />
     </TableRow>
+
 
 </TableLayout>

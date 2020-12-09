@@ -8,17 +8,20 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
+import android.view.View;
 
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
 
     protected SpeechRecognizer speechRecognizer;
+    protected APIModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        connectToApi();
     }
 
     public void listen() {
@@ -80,6 +83,14 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onEvent(int i, Bundle bundle) {
             Log.w( "MA", "MA: inside onEvent" );
+        }
+    }
+
+    public void connectToApi() {
+        if (getIntent().getData() != null) {
+            model = new APIModel(this, getIntent().getData().toString());
+        } else {
+            Log.w("MA", "no data");
         }
     }
 }

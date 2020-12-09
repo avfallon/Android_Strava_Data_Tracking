@@ -99,8 +99,8 @@ public class LoginActivity extends AppCompatActivity {
         }
         else {
             // pass username and password to MainActivity's APIModel
-            MainActivity.model.setUsername(usernameString);
-            MainActivity.model.setPassword(passwordString);
+//            MainActivity.model.setUsername(usernameString);
+//            MainActivity.model.setPassword(passwordString);
             //last thing to happen
             if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
                 mInterstitialAd.show();
