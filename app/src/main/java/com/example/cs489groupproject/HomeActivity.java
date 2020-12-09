@@ -17,6 +17,7 @@ public class HomeActivity extends AppCompatActivity {
     protected SpeechRecognizer speechRecognizer;
     protected APIModel model;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

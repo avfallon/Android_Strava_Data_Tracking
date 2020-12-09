@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private String authenticationURL = "https://www.strava.com/oauth/token";
 
     // added to try and parse through response
-    public static JSONResponse response;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

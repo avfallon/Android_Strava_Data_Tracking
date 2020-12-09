@@ -15,21 +15,25 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class APIModel {
     private Context context;
     private RequestQueue reqQueue;
-    private SharedPreferences preferences;
+    public static JSONResponse response;
+
     private String athleteURL = "https://www.strava.com/api/v3/athlete";
     private String activitiesURL = "https://www.strava.com/api/v3/athlete/activities";
     private String authenticationURL = "https://www.strava.com/oauth/token";
 
-    private String client_id = "56866";
-    private String client_secret = "1532b3527c5e995e845bb6ac8860d09f4ee63aaa";
+    private static final String client_id = "56866";
+    private static final String client_secret = "1532b3527c5e995e845bb6ac8860d09f4ee63aaa";
     private String accessCode;
     private String refreshToken;
+
 
     public APIModel(Context context, String authURL){
         reqQueue = Volley.newRequestQueue(context);
@@ -50,7 +54,18 @@ public class APIModel {
         postParams.put("code", authCode);
         postParams.put("grant_type", "authorization_code");
 
-        request( authenticationURL, Request.Method.POST, postHeaders, postParams);
+        Response.Listener<String> listener = new Response.Listener<String>(){
+            // This code receives the API response
+            @Override
+            public void onResponse(String response) {
+                Log.w("MA", "Response: "+response);
+                JSONResponse json = new JSONResponse(response);
+                accessCode = json.getAccessToken();
+                Log.w("MA", "Access Code: "+accessCode);
+            }
+        };
+
+        request( authenticationURL, Request.Method.POST, postHeaders, postParams, listener);
     }
 
 
@@ -65,7 +80,7 @@ public class APIModel {
         params.put("per_page", "30");
 
         Log.w("JSONR", "" + activitiesURL + " " + headers.toString() + " " + params.toString());
-        request( activitiesURL, Request.Method.GET, headers, params);
+//        request( activitiesURL, Request.Method.GET, headers, params);
 
 //        refreshToken = "edf4895d17c3c590c7fee640a3c3c27665ef9b24";
 //
@@ -81,24 +96,14 @@ public class APIModel {
         postParams.put("client_id", "56866");
         postParams.put("client_secret", "1532b3527c5e995e845bb6ac8860d09f4ee63aaa");
 
-        request( authenticationURL, Request.Method.POST, postHeaders, postParams);
+//        request( authenticationURL, Request.Method.POST, postHeaders, postParams);
     }
 
     // This method actually creates the GET or POST request and adds it to the request queue
-    public void request(String url, int requestMethod, Map<String, String> headers, Map<String, String> params) {
-        myStrRequest strReq = new myStrRequest(requestMethod, url, new Response.Listener<String>(){
-            // This is the code that is actually run when the get request is fulfilled
+    public void request(String url, int requestMethod, Map<String, String> headers, Map<String, String> params, Response.Listener<String> listener) {
+        myStrRequest strReq = new myStrRequest(requestMethod, url, listener, new Response.ErrorListener() {
             @Override
-            public void onResponse(String response) {
-                Log.w("MA", "Response: "+response);
-                MainActivity.response = new JSONResponse(response);
-                accessCode = MainActivity.response.getAccessToken();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //This code is executed if there is an error.
-            }
+            public void onErrorResponse(VolleyError error) {}
         }, headers, params);
         Log.w("MA", "Request Received");
 
