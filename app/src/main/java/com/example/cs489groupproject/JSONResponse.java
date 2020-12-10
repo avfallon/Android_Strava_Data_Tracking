@@ -18,11 +18,11 @@ public class JSONResponse {
     }
 
     public void parseResponse() throws JSONException {
-        Log.w("JSONR", "" + response);
+        Log.w("MA", "" + response);
         String jsonString = this.response ; //assign your JSON String here
         JSONObject obj = new JSONObject(jsonString);
         this.accessToken = obj.getString("access_token");
-        Log.w("JSONR", ""+ accessToken);
+        Log.w("MA", ""+ accessToken);
     }
 
     public String getAccessToken() {

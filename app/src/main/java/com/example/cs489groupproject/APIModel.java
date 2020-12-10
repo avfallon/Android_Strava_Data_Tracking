@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.app.Activity;
+import android.view.View;
+
 import androidx.activity.ComponentActivity;
 
 import com.android.volley.Request;
@@ -17,6 +19,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,15 +34,15 @@ public class APIModel {
 
     private static final String client_id = "56866";
     private static final String client_secret = "1532b3527c5e995e845bb6ac8860d09f4ee63aaa";
-    private String accessCode;
+    private String accessCode = "";
     private String refreshToken;
+    private String activityResponse;
 
 
     public APIModel(Context context, String authURL){
         reqQueue = Volley.newRequestQueue(context);
         this.context = context;
         authorizeAccount(authURL);
-        //connect();
     }
 
     // This method takes the URL returned after login in Chrome, gets the authorization code,
@@ -69,22 +72,24 @@ public class APIModel {
     }
 
 
-    public void connect() {
+    public void getActivities() {
         Map<String, String> headers = new HashMap<String, String>();
-        // old: e5fe98a51ef89da9ea99abb405918cd51f92db4c
-        // new: 6af8cde453ca96783792c1d6781991ec2a680e5e
         headers.put("Authorization", "Bearer "+accessCode);
-        headers.put("accept", "application/json");
+//        headers.put("accept", "application/json");
         Map<String, String> params = new HashMap<String, String>();
         params.put("after", "10");
-        params.put("per_page", "30");
 
-        Log.w("JSONR", "" + activitiesURL + " " + headers.toString() + " " + params.toString());
-//        request( activitiesURL, Request.Method.GET, headers, params);
+        Response.Listener<String> listener = new Response.Listener<String>(){
+            // This code receives the API response
+            @Override
+            public void onResponse(String response) {
+                Log.w("MA", "Activity Response: "+response);
+                activityResponse = response;
+            }
+        };
 
-//        refreshToken = "edf4895d17c3c590c7fee640a3c3c27665ef9b24";
-//
-//        refreshAccessCode();
+        Log.w("MA", "activites request   "+accessCode);
+        request( activitiesURL, Request.Method.GET, headers, params, listener);
     }
 
     // This method is not finished, it will be used to automatically generate a valid access code

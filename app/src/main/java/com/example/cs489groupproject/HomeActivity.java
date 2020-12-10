@@ -25,6 +25,14 @@ public class HomeActivity extends AppCompatActivity {
         connectToApi();
     }
 
+    public void connectToApi() {
+        if (getIntent().getData() != null) {
+            model = new APIModel(this, getIntent().getData().toString());
+        } else {
+            Log.w("MA", "no data");
+        }
+    }
+
     public void listen() {
         if(this.speechRecognizer != null)
             speechRecognizer.destroy();
@@ -87,11 +95,8 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void connectToApi() {
-        if (getIntent().getData() != null) {
-            model = new APIModel(this, getIntent().getData().toString());
-        } else {
-            Log.w("MA", "no data");
-        }
+    public void activitiesConnect(View v) {
+        model.getActivities();
     }
+
 }
