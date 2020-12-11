@@ -14,18 +14,16 @@ public class DataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data);
+        viewData();
     }
 
-    public void viewData(View v) {
-        Button b = findViewById(R.id.data_button);
-        b.setVisibility(View.INVISIBLE);
-
+    public void viewData() {
         TextView averageDistance = findViewById(R.id.average_distance);
         averageDistance.setText("Your average run distance is: " + HomeActivity.rd.getAverageDistance());
         averageDistance.setVisibility(View.VISIBLE);
 
         TextView averageInactive = findViewById(R.id.average_inactive_time);
-        averageInactive.setText("On average, you spend " + HomeActivity.rd.getAverageInactiveTime() + "% of your runs inactive");
+        averageInactive.setText("You were inactive " + HomeActivity.rd.getAverageInactiveTime() + "% of the time");
         averageInactive.setVisibility(View.VISIBLE);
 
         TextView averageElevationGain = findViewById(R.id.average_elevation_gain);
@@ -33,5 +31,38 @@ public class DataActivity extends AppCompatActivity {
         averageElevationGain.setVisibility(View.VISIBLE);
     }
 
+    protected void onStart( ) {
+        super.onStart( );
+        Log.w( "MA", "Inside DataActivity::onStart" );
+    }
+
+    protected void onRestart( ) {
+        super.onRestart( );
+        Log.w( "MA", "Inside DataActivity::onRestart" );
+    }
+
+    protected void onResume( ) {
+        super.onResume( );
+        Log.w( "MA", "Inside DataActivity::onResume" );
+    }
+
+    protected void onPause( ) {
+        super.onPause( );
+        Log.w( "MA", "Inside DataActivity::onPause" );
+    }
+
+    protected void onStop( ) {
+        super.onStop( );
+        Log.w( "MA", "Inside DataActivity::onStop" );
+    }
+
+    protected void onDestroy( ) {
+        super.onDestroy( );
+        Log.w( "MA", "Inside DataActivity::onDestroy" );
+    }
+    public void goBack( View v ) {
+        finish();
+        overridePendingTransition( R.anim.slide_from_left, 0 );
+    }
 
 }
