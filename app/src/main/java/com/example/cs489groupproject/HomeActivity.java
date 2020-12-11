@@ -1,28 +1,50 @@
 package com.example.cs489groupproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
-    protected SpeechRecognizer speechRecognizer;
+    public static final int VOICE_CODE = 1;
+
     public static APIModel model;
     public static RunData rd;
+    protected Intent speechRecognizerIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        PackageManager manager = getPackageManager();
+        speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH );
+        List<ResolveInfo> list = manager.queryIntentActivities(speechRecognizerIntent, 0 );
+        if( list.size() > 0 ) {
+            Log.w( "MA", "System supports voice recognition" );
+        } else {
+            Log.w( "MA", "System does not natively support voice recognition, use another input" );
+        }
+
+        ButtonHandler bh = new ButtonHandler();
+        Button listenButton = findViewById(R.id.trigger_voice_recognition);
+        listenButton.setOnClickListener(bh);
+
         connectToApi();
     }
 
@@ -34,71 +56,26 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void listen() {
-        if(this.speechRecognizer != null)
-            speechRecognizer.destroy();
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+    public void askPermission( ) {
+        if(ContextCompat.checkSelfPermission( this, Manifest.permission.RECORD_AUDIO ) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions( this, new String [] { Manifest.permission.RECORD_AUDIO}, VOICE_CODE );
+            Log.w( "MA", "Permission to record audio is granted" );
+            listen();
+        } else {
+            Log.w( "MA", "Permission to record audio has been previously granted" );
+            listen();
+        }
+    }
 
-        SpeechListener speechListener = new SpeechListener();
-        Intent speechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        speechRecognizer.startListening(speechIntent);
+    public void listen() {
+        speechRecognizerIntent.putExtra( RecognizerIntent.EXTRA_PROMPT, "Say a number" );
+        speechRecognizerIntent.putExtra( RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM );
+        startActivityForResult( speechRecognizerIntent, VOICE_CODE );
     }
 
     public void viewData(View v) {
         Intent intent = new Intent( this, DataActivity.class );
-        startActivity( intent );
-    }
-
-    public class SpeechListener implements RecognitionListener {
-
-        @Override
-        public void onReadyForSpeech(Bundle bundle) {
-            Log.w( "MA", "MA: inside onReadyForSpeech" );
-        }
-
-        @Override
-        public void onBeginningOfSpeech() {
-            Log.w( "MA", "MA: inside onBeginningOfSpeech" );
-        }
-
-        @Override
-        public void onRmsChanged(float v) {
-            Log.w( "MA", "MA: inside onRmsChanged" );
-        }
-
-        @Override
-        public void onBufferReceived(byte[] bytes) {
-            Log.w( "MA", "MA: inside onBufferReceived" );
-        }
-
-        @Override
-        public void onEndOfSpeech() {
-            Log.w( "MA", "MA: inside onEndOfSpeech" );
-        }
-
-        @Override
-        public void onError(int i) {
-            Log.w( "MA", "MA: inside onError, error is " + i  );
-            listen( );
-        }
-
-        @Override
-        public void onResults(Bundle bundle) {
-            ArrayList<String> words = bundle.getStringArrayList( SpeechRecognizer.RESULTS_RECOGNITION );
-            float [] scores = bundle.getFloatArray( SpeechRecognizer.CONFIDENCE_SCORES );
-
-            // idk what we are doing with the words
-        }
-
-        @Override
-        public void onPartialResults(Bundle bundle) {
-            Log.w( "MA", "MA: inside onPartialResults" );
-        }
-
-        @Override
-        public void onEvent(int i, Bundle bundle) {
-            Log.w( "MA", "MA: inside onEvent" );
-        }
+        startActivity(intent);
     }
 
     public void activitiesConnect(View v) {
@@ -106,5 +83,33 @@ public class HomeActivity extends AppCompatActivity {
         Toast.makeText(this, "Connected activities",
                 Toast.LENGTH_LONG).show();
     }
+
+    private class ButtonHandler implements View.OnClickListener{
+        public void onClick(View v){
+            switch(v.getId()) {
+                case R.id.trigger_voice_recognition:
+                    askPermission();
+                    break;
+            }
+        }
+
+    }
+
+    protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
+        super.onActivityResult( requestCode, resultCode, data );
+        Log.w( "MA", "MA: inside onActivityResult, request: " + requestCode + "; resultCode: " + resultCode
+                + ";data = " + data );
+
+        if( requestCode == VOICE_CODE && resultCode == RESULT_OK && data != null ) {
+            ArrayList<String> returnedWords = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            String number = returnedWords.get(0);
+            Log.w( "MA", "Word from speech recognizer: " + number );
+            Intent dataIntent = new Intent( this, DataActivity.class );
+            // dataIntent.putExtra(, result );
+            // dataIntent.putExtra( "attraction", attraction );
+            startActivity(dataIntent);
+        }
+    }
+
 
 }
