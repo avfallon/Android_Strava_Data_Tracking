@@ -103,8 +103,21 @@ public class HomeActivity extends AppCompatActivity {
 
         if( requestCode == VOICE_CODE && resultCode == RESULT_OK && data != null ) {
             ArrayList<String> returnedWords = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            // Herve's code, idk how hes extracting the word since he hardcoded it in his example
+            float[] scores = data.getFloatArrayExtra(RecognizerIntent.EXTRA_CONFIDENCE_SCORES);
+            int i = 0;
+            for( String word: returnedWords ) {
+                if( word != null && i < scores.length ) {
+                    Log.w( "MA", "MA: " + word + "; " + scores[i] );
+                    i++;
+
+                }
+            }
+
+           /* OLD // NON HERVE
             String number = returnedWords.get(0);
             Log.w( "MA", "Word from speech recognizer: " + number );
+            */
             Intent dataIntent = new Intent( this, DataActivity.class );
             // dataIntent.putExtra(, result );
             // dataIntent.putExtra( "attraction", attraction );
