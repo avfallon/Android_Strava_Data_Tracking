@@ -76,6 +76,7 @@ public class HomeActivity extends AppCompatActivity {
     public void viewData(View v) {
         Intent intent = new Intent( this, DataActivity.class );
         startActivity(intent);
+        overridePendingTransition( R.anim.fade_in_and_scale, 0 );
     }
 
     public void activitiesConnect(View v) {
@@ -111,5 +112,35 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+
+    protected void onStart( ) {
+        super.onStart( );
+        Log.w( "MA", "Inside MainActivity::onStart" );
+    }
+
+    protected void onRestart( ) {
+        super.onRestart( );
+        Log.w( "MA", "Inside MainActivity::onRestart" );
+    }
+
+    protected void onResume( ) {
+        super.onResume( );
+        Log.w( "MA", "Inside MainActivity::onResume" );
+    }
+
+    protected void onPause( ) {
+        super.onPause( );
+        Log.w( "MA", "Inside MainActivity::onPause" );
+    }
+
+    protected void onStop( ) {
+        super.onStop( );
+        Log.w( "MA", "Inside MainActivity::onStop" );
+    }
+
+    protected void onDestroy( ) {
+        super.onDestroy( );
+        Log.w( "MA", "Inside MainActivity::onDestroy" );
+    }
 
 }
