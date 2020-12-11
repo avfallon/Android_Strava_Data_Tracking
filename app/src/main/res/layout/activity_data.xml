@@ -6,41 +6,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".HomeActivity">
+    tools:context=".DataActivity">
 
     <TableRow>
         <TextView
-            style="@style/TitleTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="HOME"
+            android:id="@+id/average_distance"
+            style="@style/TextTheme"
             />
     </TableRow>
 
     <TableRow>
         <TextView
+            android:id="@+id/average_inactive_time"
             style="@style/TextTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:id="@+id/average_elevation_gain"
+            style="@style/TextTheme"
             />
     </TableRow>
 
     <TableRow>
         <Button
+            android:id="@+id/data_button"
             style="@style/TextTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/connect"
-            android:onClick="activitiesConnect"
-            />
-    </TableRow>
-
-    <TableRow>
-        <Button
-            style="@style/TextTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/view_data"
+            android:text = "test"
             android:onClick="viewData"
             />
     </TableRow>

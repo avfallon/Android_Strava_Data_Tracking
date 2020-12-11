@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Time;
@@ -24,9 +25,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class APIModel {
+
     private Context context;
     private RequestQueue reqQueue;
     public static JSONResponse response;
+
+    //"https://www.strava.com/api/v3/athlete/activities?before=&after=&page=&per_page=" "Authorization: Bearer [[token]]"
 
     private String athleteURL = "https://www.strava.com/api/v3/athlete";
     private String activitiesURL = "https://www.strava.com/api/v3/athlete/activities";
@@ -45,6 +49,34 @@ public class APIModel {
         authorizeAccount(authURL);
     }
 
+    public void getAthleteActivities() {
+        Map<String, String> getHeaders = new HashMap<String, String>();
+        Map<String, String> getParams = new HashMap<String, String>();
+
+        getParams.put("before", "56");
+        getParams.put("after", "56");
+        getParams.put("page", "1");
+        getParams.put("perPage", "30");
+        getParams.put("access_token", accessCode);
+
+        Response.Listener<String> listener = new Response.Listener<String>(){
+            // This code receives the API response
+            @Override
+            public void onResponse(String response) {
+                Log.w("AM", "Response: "+response);
+                JSONResponse json = new JSONResponse(response, accessCode);
+                try {
+                    json.parseResponseForAccessToken();
+                    accessCode = json.getAccessToken();
+                } catch (Exception e) {
+                    Log.w("AM", "exception: " + e.toString());
+                }
+            }
+        };
+
+        request( activitiesURL, Request.Method.GET, getHeaders, getParams, listener);
+    }
+
     // This method takes the URL returned after login in Chrome, gets the authorization code,
     // and makes a POST request to obtain the access code and refresh code
     public void authorizeAccount(String url) {
@@ -61,10 +93,15 @@ public class APIModel {
             // This code receives the API response
             @Override
             public void onResponse(String response) {
-                Log.w("MA", "Response: "+response);
+                Log.w("AM", "Response: "+response);
                 JSONResponse json = new JSONResponse(response);
-                accessCode = json.getAccessToken();
-                Log.w("MA", "Access Code: "+accessCode);
+                try {
+                    json.parseResponseForAccessToken();
+                    accessCode = json.getAccessToken();
+                } catch (Exception e) {
+                    Log.w("APIModel", "exception: " + e.toString());
+                }
+                Log.w("AM", "Access Code: "+accessCode);
             }
         };
 
@@ -83,13 +120,23 @@ public class APIModel {
             // This code receives the API response
             @Override
             public void onResponse(String response) {
-                Log.w("MA", "Activity Response: "+response);
+                Log.w("AM", "Activity Response: "+response);
+                JSONResponse json = new JSONResponse(response);
+                try {
+                    json.parseResponseForRuns();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 activityResponse = response;
             }
         };
 
-        Log.w("MA", "activites request   "+accessCode);
+        Log.w("AM", "activites request   "+accessCode);
         request( activitiesURL, Request.Method.GET, headers, params, listener);
+    }
+
+    public String getActivityResponse() {
+        return activityResponse;
     }
 
     // This method is not finished, it will be used to automatically generate a valid access code

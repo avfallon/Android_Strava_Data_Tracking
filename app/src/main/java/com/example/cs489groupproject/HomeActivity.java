@@ -9,14 +9,15 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
 
     protected SpeechRecognizer speechRecognizer;
-    protected APIModel model;
-
+    public static APIModel model;
+    public static RunData rd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,11 @@ public class HomeActivity extends AppCompatActivity {
         SpeechListener speechListener = new SpeechListener();
         Intent speechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizer.startListening(speechIntent);
+    }
+
+    public void viewData(View v) {
+        Intent intent = new Intent( this, DataActivity.class );
+        startActivity( intent );
     }
 
     public class SpeechListener implements RecognitionListener {
@@ -97,6 +103,8 @@ public class HomeActivity extends AppCompatActivity {
 
     public void activitiesConnect(View v) {
         model.getActivities();
+        Toast.makeText(this, "Connected activities",
+                Toast.LENGTH_LONG).show();
     }
 
 }
