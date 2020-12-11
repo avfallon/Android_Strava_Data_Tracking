@@ -108,7 +108,7 @@ public class APIModel {
         request( authenticationURL, Request.Method.POST, postHeaders, postParams, listener);
     }
 
-
+    // THIS WORKS AND IS USED
     public void getActivities() {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Authorization", "Bearer "+accessCode);
