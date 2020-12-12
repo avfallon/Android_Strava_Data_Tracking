@@ -1,14 +1,7 @@
 package com.example.cs489groupproject;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.util.Log;
-import android.app.Activity;
-import android.view.View;
-
-import androidx.activity.ComponentActivity;
+import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,9 +11,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,6 +68,7 @@ public class APIModel {
             }
         };
 
+        // This method actually makes the call to the API
         request( authenticationURL, Request.Method.POST, postHeaders, postParams, listener);
     }
 
