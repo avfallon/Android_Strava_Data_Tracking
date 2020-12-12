@@ -124,8 +124,8 @@ public class LoginActivity extends AppCompatActivity {
         Log.w("LA", "goToNextLevel");
         // Show the next level and reload the ad to prepare for the level after.
         // mLevelTextView.setText("Level " + (++mLevel));
-        // mInterstitialAd = newInterstitialAd();
-        // loadInterstitial();
+        mInterstitialAd = newInterstitialAd();
+        loadInterstitial();
 
         Intent intent = new Intent( this, HomeActivity.class );
         startActivity( intent );
