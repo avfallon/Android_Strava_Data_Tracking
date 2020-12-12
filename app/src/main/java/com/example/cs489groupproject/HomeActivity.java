@@ -17,6 +17,7 @@ import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -43,6 +44,11 @@ public class HomeActivity extends AppCompatActivity {
 
         manager = getPackageManager();
         sharedPreferences = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+
+        String num = sharedPreferences.getString("voiceResult", "-1");
+        if(! num.equals("-1")) {
+            ((TextView) findViewById(R.id.voiceResults)).setText(num);
+        }
 
         speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH );
         List<ResolveInfo> list = manager.queryIntentActivities(speechRecognizerIntent, 0 );
@@ -99,7 +105,10 @@ public class HomeActivity extends AppCompatActivity {
         Toast.makeText(this, "Connected activities",
                 Toast.LENGTH_LONG).show();
         ((Button) findViewById(R.id.activitiesBtn)).setVisibility(View.INVISIBLE);
-        ((Button) findViewById(R.id.dataActivityBtn)).setVisibility(View.VISIBLE);
+        Log.w("MA", "pref: "+sharedPreferences.getInt(voiceResult, -1));
+        if(! sharedPreferences.getString("voiceResult", "-1").equals("-1")) {
+            ((Button) findViewById(R.id.dataActivityBtn)).setVisibility(View.VISIBLE);
+        }
     }
 
     public void onClick(View v) {
@@ -125,6 +134,10 @@ public class HomeActivity extends AppCompatActivity {
                 voiceResult = returnedWords.get(0);
                 editor.putString("voiceResult", voiceResult);
                 editor.apply();
+
+                ((TextView) findViewById(R.id.voiceResults)).setText(voiceResult);
+                ((Button) findViewById(R.id.dataActivityBtn)).setVisibility(View.VISIBLE);
+
                 Log.w("HA", "voiceResult = " + voiceResult);
             }
         } catch (NullPointerException e) {

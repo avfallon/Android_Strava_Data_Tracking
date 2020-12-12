@@ -6,7 +6,7 @@
     <string name="password_hint">Enter Password</string>
     <string name="title_activity_login">MainActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="listen_button">Hey Hervana…</string>
+    <string name="listen_button">Enter Number of Runs</string>
 
 
     <string name="interstitial_ad_sample">Interstitial Ad Sample</string>

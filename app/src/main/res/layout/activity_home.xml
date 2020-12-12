@@ -36,19 +36,6 @@
             />
     </TableRow>
 
-    <TableRow>
-        <Button
-            style="@style/TextTheme"
-            android:id="@+id/dataActivityBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/view_data"
-            android:onClick="viewData"
-            android:visibility="invisible"
-            />
-
-    </TableRow>
-
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -63,13 +50,27 @@
     </TableRow>
 
     <TableRow>
+        <Button
+            style="@style/TextTheme"
+            android:id="@+id/dataActivityBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view_data"
+            android:onClick="viewData"
+            android:visibility="invisible"
+            />
+
+    </TableRow>
+
+
+    <TableRow>
         <TextView
             style="@style/TitleTheme"
             android:layout_marginTop="15dp"
             android:id="@+id/voiceResults"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Test"
+            android:text=""
             />
     </TableRow>
 
