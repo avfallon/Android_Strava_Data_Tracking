@@ -89,6 +89,7 @@ public class HomeActivity extends AppCompatActivity {
             Log.w("HA", "inside viewData: " + e.toString());
         }
         Intent intent = new Intent( this, DataActivity.class );
+        Log.w("MA", "viewData");
         startActivity(intent);
         overridePendingTransition( R.anim.fade_in_and_scale, 0 );
     }
