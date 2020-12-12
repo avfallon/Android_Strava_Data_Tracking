@@ -74,4 +74,14 @@
             />
     </TableRow>
 
+    <TableRow>
+        <TextView
+            android:id="@+id/level"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            />
+    </TableRow>
+
 </TableLayout>

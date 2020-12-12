@@ -19,7 +19,7 @@
 
     <TableRow>
         <TextView
-            android:id="@+id/level"
+            android:id="@+id/level2"
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
