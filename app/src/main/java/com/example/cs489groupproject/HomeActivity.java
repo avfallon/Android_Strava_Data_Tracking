@@ -98,6 +98,8 @@ public class HomeActivity extends AppCompatActivity {
         model.getActivities();
         Toast.makeText(this, "Connected activities",
                 Toast.LENGTH_LONG).show();
+        ((Button) findViewById(R.id.activitiesBtn)).setVisibility(View.INVISIBLE);
+        ((Button) findViewById(R.id.dataActivityBtn)).setVisibility(View.VISIBLE);
     }
 
     public void onClick(View v) {
