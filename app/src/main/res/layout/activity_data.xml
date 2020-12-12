@@ -8,6 +8,29 @@
     android:gravity="center"
     tools:context=".DataActivity">
 
+    <TableRow
+        android:layout_width="388dp"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/max_speed_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/average_speed_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:max="30" />
+    </TableRow>
+
     <TableRow>
         <TextView
             android:id="@+id/average_distance"

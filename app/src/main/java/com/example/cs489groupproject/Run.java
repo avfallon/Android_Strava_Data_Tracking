@@ -7,6 +7,8 @@ public class Run {
     double time_moving;
     double time_elapsed;
     double elevation_gain;
+    double max_speed;
+    double average_speed;
 
     public Run(String name, double distance, double time_moving, double time_elapsed, double elevation_gain) {
         this.name = name;
@@ -30,6 +32,15 @@ public class Run {
 
     public double getElevationGain() {
         return elevation_gain;
+    }
+
+    public double getMaxSpeed() { return max_speed; }
+
+    public double getAvgSpeed() { return average_speed; }
+
+    public void setSpeeds(double max, double average) {
+        max_speed = max;
+        average_speed = average;
     }
 
 }

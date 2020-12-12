@@ -54,4 +54,24 @@ public class RunData {
         return total/i;
     }
 
+    public double getAverageSpeed() {
+        double total = 0;
+        int i = 0;
+        while(i < runs.size()) {
+            total += runs.get(i).getAvgSpeed();
+            i++;
+        }
+        return total/i;
+    }
+
+    public double getMaxSpeed() {
+        double max = 0;
+        int i = 0;
+        while(i < runs.size()) {
+            max = Math.max(runs.get(i).max_speed, max);
+            i++;
+        }
+        return max;
+    }
+
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class DataActivity extends AppCompatActivity {
@@ -31,6 +32,16 @@ public class DataActivity extends AppCompatActivity {
         TextView averageElevationGain = findViewById(R.id.average_elevation_gain);
         averageElevationGain.setText("Your average elevation gain is: " + HomeActivity.rd.getAverageElevationGain());
         averageElevationGain.setVisibility(View.VISIBLE);
+
+        ProgressBar averageSpeed = findViewById(R.id.average_speed_bar);
+        ProgressBar maxSpeed = findViewById(R.id.max_speed_bar);
+
+        int avg_speed = (int) HomeActivity.rd.getAverageSpeed();
+        int max_speed = (int) HomeActivity.rd.getMaxSpeed();
+        averageSpeed.setMax(max_speed);
+        maxSpeed.setMax(max_speed+15);
+        averageSpeed.setProgress(avg_speed);
+        maxSpeed.setProgress(avg_speed);
     }
 
     protected void onStart( ) {

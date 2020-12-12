@@ -31,6 +31,8 @@ public class JSONResponse {
         Log.w("JSONR", "in parseResponseForRuns: " + response);
         String jsonString = this.response ; //assign your JSON String here
         int limit;
+        double max_speed = 0;
+        double average_speed = 0;
         try {
             String s = HomeActivity.voiceResult;
             if(s.equals("")) {
@@ -65,6 +67,8 @@ public class JSONResponse {
                         double time_moving = j.getDouble("moving_time");
                         double time_elapsed = j.getDouble("elapsed_time");
                         double elevation_gain = j.getDouble("total_elevation_gain");
+                        max_speed = Math.max(max_speed, j.getDouble("max_speed"));
+                        average_speed += j.getDouble("max_speed");
                         Run r = new Run(name, distance, time_moving, time_elapsed, elevation_gain);
                         Log.w("JSONR", "made Run object");
                         Log.w("JSONR", "inside onCreate, before declaring rd");
