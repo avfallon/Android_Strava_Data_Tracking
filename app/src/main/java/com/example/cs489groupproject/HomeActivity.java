@@ -5,7 +5,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -25,17 +27,23 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity {
 
     public static final int VOICE_CODE = 1;
+    private static final String PREF_NAME = "StravaGroup";
 
     public static String voiceResult;
     public static APIModel model;
     public static RunData rd;
     protected Intent speechRecognizerIntent;
+    protected SharedPreferences sharedPreferences;
+    protected PackageManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        PackageManager manager = getPackageManager();
+
+        manager = getPackageManager();
+        sharedPreferences = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+
         speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH );
         List<ResolveInfo> list = manager.queryIntentActivities(speechRecognizerIntent, 0 );
         if( list.size() > 0 ) {
@@ -97,20 +105,28 @@ public class HomeActivity extends AppCompatActivity {
 
     protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
         super.onActivityResult( requestCode, resultCode, data );
-        Log.w( "MA", "MA: inside onActivityResult, request: " + requestCode + "; resultCode: " + resultCode
+        Log.w("MA", "MA: inside onActivityResult, request: " + requestCode + "; resultCode: " + resultCode
                 + ";data = " + data );
-        if( requestCode == VOICE_CODE && resultCode == RESULT_OK && data != null ) {
-            ArrayList<String> returnedWords = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            float[] scores = data.getFloatArrayExtra(RecognizerIntent.EXTRA_CONFIDENCE_SCORES);
-            int i = 0;
-            for( String word: returnedWords ) {
-                if (word != null && i < scores.length) {
-                    Log.w("MA", "MA: " + word + "; " + scores[i] + " index: " + i);
-                    i++;
+        try {
+            if (requestCode == VOICE_CODE && resultCode == RESULT_OK && data != null) {
+                ArrayList<String> returnedWords = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                float[] scores = data.getFloatArrayExtra(RecognizerIntent.EXTRA_CONFIDENCE_SCORES);
+                int i = 0;
+                for (String word : returnedWords) {
+                    if (word != null && i < scores.length) {
+                        Log.w("MA", "MA: " + word + "; " + scores[i] + " index: " + i);
+                        i++;
+                    }
                 }
+                SharedPreferences.Editor editor = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();
+                voiceResult = returnedWords.get(0);
+                editor.putString("voiceResult", voiceResult);
+                editor.apply();
+                Log.w("HA", "voiceResult = " + voiceResult);
             }
-            voiceResult = returnedWords.get(0);
-            Log.w("HA", "voiceResult = " + voiceResult);
+        } catch (NullPointerException e) {
+            Toast.makeText(getApplicationContext(), "Sorry! There was an error processing your speech. Please try again.", Toast.LENGTH_SHORT).show();
+            Log.w("HA", "Received NPE while processing speech for int: " + e.toString());
         }
     }
 
