@@ -28,7 +28,7 @@ public class APIModel {
 
     private Context context;
     private RequestQueue reqQueue;
-    public static JSONResponse response;
+    public static JSONResponse jsonResponse;
 
     //"https://www.strava.com/api/v3/athlete/activities?before=&after=&page=&per_page=" "Authorization: Bearer [[token]]"
 
@@ -39,7 +39,7 @@ public class APIModel {
     private static final String client_id = "56866";
     private static final String client_secret = "1532b3527c5e995e845bb6ac8860d09f4ee63aaa";
     private String accessCode = "";
-    private String refreshToken;
+    private String voiceLimit;
     private String activityResponse;
 
 
@@ -47,34 +47,6 @@ public class APIModel {
         reqQueue = Volley.newRequestQueue(context);
         this.context = context;
         authorizeAccount(authURL);
-    }
-
-    public void getAthleteActivities() {
-        Map<String, String> getHeaders = new HashMap<String, String>();
-        Map<String, String> getParams = new HashMap<String, String>();
-
-        getParams.put("before", "56");
-        getParams.put("after", "56");
-        getParams.put("page", "1");
-        getParams.put("perPage", "30");
-        getParams.put("access_token", accessCode);
-
-        Response.Listener<String> listener = new Response.Listener<String>(){
-            // This code receives the API response
-            @Override
-            public void onResponse(String response) {
-                Log.w("AM", "Response: "+response);
-                JSONResponse json = new JSONResponse(response, accessCode);
-                try {
-                    json.parseResponseForAccessToken();
-                    accessCode = json.getAccessToken();
-                } catch (Exception e) {
-                    Log.w("AM", "exception: " + e.toString());
-                }
-            }
-        };
-
-        request( activitiesURL, Request.Method.GET, getHeaders, getParams, listener);
     }
 
     // This method takes the URL returned after login in Chrome, gets the authorization code,
@@ -120,14 +92,10 @@ public class APIModel {
             // This code receives the API response
             @Override
             public void onResponse(String response) {
-                Log.w("AM", "Activity Response: "+response);
-                JSONResponse json = new JSONResponse(response);
-                try {
-                    json.parseResponseForRuns();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Log.w("APIModel", "Activity Response: "+response);
+                jsonResponse = new JSONResponse(response);
                 activityResponse = response;
+                //json.parseResponseForRuns();
             }
         };
 
@@ -139,17 +107,6 @@ public class APIModel {
         return activityResponse;
     }
 
-    // This method is not finished, it will be used to automatically generate a valid access code
-    public void refreshAccessCode() {
-        Map<String, String> postHeaders = new HashMap<String, String>();
-        Map<String, String> postParams = new HashMap<String, String>();
-        postParams.put("grant_type", "refresh_token");
-        postParams.put("refresh_token", refreshToken);
-        postParams.put("client_id", "56866");
-        postParams.put("client_secret", "1532b3527c5e995e845bb6ac8860d09f4ee63aaa");
-
-//        request( authenticationURL, Request.Method.POST, postHeaders, postParams);
-    }
 
     // This method actually creates the GET or POST request and adds it to the request queue
     public void request(String url, int requestMethod, Map<String, String> headers, Map<String, String> params, Response.Listener<String> listener) {
@@ -157,9 +114,14 @@ public class APIModel {
             @Override
             public void onErrorResponse(VolleyError error) {}
         }, headers, params);
-        Log.w("MA", "Request Received");
+        Log.w("AM", "Request Received");
 
         reqQueue.add(strReq);
+    }
+
+    public void setVoiceLimit(String s) {
+        Log.w("AM", "setVoiceLimit: " + s);
+        this.voiceLimit = s;
     }
 
     // This private class is just the StringRequest class that I overrode to allow for headers/params

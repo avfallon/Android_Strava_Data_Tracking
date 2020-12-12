@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public static final int VOICE_CODE = 1;
 
+    public static String voiceResult;
     public static APIModel model;
     public static RunData rd;
     protected Intent speechRecognizerIntent;
@@ -41,9 +44,7 @@ public class HomeActivity extends AppCompatActivity {
             Log.w( "MA", "System does not natively support voice recognition, use another input" );
         }
 
-        ButtonHandler bh = new ButtonHandler();
-        Button listenButton = findViewById(R.id.trigger_voice_recognition);
-        listenButton.setOnClickListener(bh);
+        voiceResult = "";
 
         connectToApi();
     }
@@ -74,6 +75,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void viewData(View v) {
+        try {
+            model.jsonResponse.parseResponseForRuns();
+        } catch (JSONException e) {
+            Log.w("HA", "inside viewData: " + e.toString());
+        }
         Intent intent = new Intent( this, DataActivity.class );
         startActivity(intent);
         overridePendingTransition( R.anim.fade_in_and_scale, 0 );
@@ -85,46 +91,28 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
     }
 
-    private class ButtonHandler implements View.OnClickListener{
-        public void onClick(View v){
-            switch(v.getId()) {
-                case R.id.trigger_voice_recognition:
-                    askPermission();
-                    break;
-            }
-        }
-
+    public void onClick(View v) {
+        askPermission();
     }
 
     protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
         super.onActivityResult( requestCode, resultCode, data );
         Log.w( "MA", "MA: inside onActivityResult, request: " + requestCode + "; resultCode: " + resultCode
                 + ";data = " + data );
-
         if( requestCode == VOICE_CODE && resultCode == RESULT_OK && data != null ) {
             ArrayList<String> returnedWords = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            // Herve's code, idk how hes extracting the word since he hardcoded it in his example
             float[] scores = data.getFloatArrayExtra(RecognizerIntent.EXTRA_CONFIDENCE_SCORES);
             int i = 0;
             for( String word: returnedWords ) {
-                if( word != null && i < scores.length ) {
-                    Log.w( "MA", "MA: " + word + "; " + scores[i] );
+                if (word != null && i < scores.length) {
+                    Log.w("MA", "MA: " + word + "; " + scores[i] + " index: " + i);
                     i++;
-
                 }
             }
-
-           /* OLD // NON HERVE
-            String number = returnedWords.get(0);
-            Log.w( "MA", "Word from speech recognizer: " + number );
-            */
-            Intent dataIntent = new Intent( this, DataActivity.class );
-            // dataIntent.putExtra(, result );
-            // dataIntent.putExtra( "attraction", attraction );
-            startActivity(dataIntent);
+            voiceResult = returnedWords.get(0);
+            Log.w("HA", "voiceResult = " + voiceResult);
         }
     }
-
 
     protected void onStart( ) {
         super.onStart( );

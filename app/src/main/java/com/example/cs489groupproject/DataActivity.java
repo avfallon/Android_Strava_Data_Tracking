@@ -60,6 +60,7 @@ public class DataActivity extends AppCompatActivity {
         super.onDestroy( );
         Log.w( "MA", "Inside DataActivity::onDestroy" );
     }
+
     public void goBack( View v ) {
         finish();
         overridePendingTransition( R.anim.slide_from_left, 0 );

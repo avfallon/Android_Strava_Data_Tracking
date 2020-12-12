@@ -55,7 +55,8 @@
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/listen_button" />
+            android:text="@string/listen_button"
+            android:onClick="onClick"/>
     </TableRow>
 
 </TableLayout>
