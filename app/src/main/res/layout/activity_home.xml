@@ -28,6 +28,7 @@
     <TableRow>
         <Button
             style="@style/TextTheme"
+            android:id="@+id/activitiesBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/connect"
@@ -38,10 +39,12 @@
     <TableRow>
         <Button
             style="@style/TextTheme"
+            android:id="@+id/dataActivityBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/view_data"
             android:onClick="viewData"
+            android:visibility="invisible"
             />
 
     </TableRow>
@@ -57,6 +60,17 @@
             android:layout_height="wrap_content"
             android:text="@string/listen_button"
             android:onClick="onClick"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/TitleTheme"
+            android:layout_marginTop="15dp"
+            android:id="@+id/voiceResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test"
+            />
     </TableRow>
 
 </TableLayout>
