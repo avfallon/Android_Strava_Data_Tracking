@@ -1,4 +1,4 @@
-This is an Android application written to aggregate personal data from the exercise trackinh application Strava.
+This is an Android application written to aggregate personal data from the exercise tracking application Strava.
 
 Access your personal data directly, and see it in aggregations unavailable in the primary Strava app
 
