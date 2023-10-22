@@ -1,6 +1,5 @@
-To operate this app, you must log into a Strava account when prompted, in order to access that acount's data
+This is an Android application written to aggregate personal data from the exercise trackinh application Strava.
 
-If you do not have your own Strava account, you can use the following username and password:
+Access your personal data directly, and see it in aggregations unavailable in the primary Strava app
 
-username: avfnorwalk2@gmail.com
-password: password
+Take advantage of the public strava API in unlimited ways with access to your run mapping, calendar data, and personal achievements.
